@@ -3,10 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
+    <title>Dynamic Image Pop-up</title>
+    <style>
+        .popupImage {
+            position: fixed;
+            /* Adjust image size as a percentage of the viewport width */
+            width: 10vw; /* Example: 10% of the viewport width */
+            /* Ensure the aspect ratio is maintained. Adjust the percentage as needed */
+            height: auto;
+            z-index: 1;
+            cursor: pointer;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Test</h1>
-    <p>Test File.</p>
+    <script>
+        let imageCount = 0;
+        const maxImages = 100;
+
+        document.documentElement.addEventListener('click', function(event) {
+            if(imageCount >= maxImages) {
+                // Remove the oldest image if we've reached max images
+                const oldestImage = document.querySelector('.popupImage');
+                oldestImage.parentNode.removeChild(oldestImage);
+            } else {
+                imageCount++;
+            }
+
+            const img = document.createElement('img');
+            img.src = 'images/ollie.jpg'; // Your image source here
+            img.onload = function() {
+                const imageWidth = img.width;
+                const imageHeight = img.height;
+                // Adjust the image position to center it on the cursor
+                img.style.left = `${event.pageX - imageWidth / 2}px`;
+                img.style.top = `${event.pageY - imageHeight / 2}px`;
+            };
+            img.classList.add('popupImage');
+
+            document.body.appendChild(img);
+        }, true);
+    </script>
 </body>
 </html>
