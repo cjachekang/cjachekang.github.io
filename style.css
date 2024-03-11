@@ -1,0 +1,5 @@
+.staticImage, .movingImage {
+    position: fixed;
+    width: 8%; /* Proportional to viewport, adjust as needed */
+    height: auto;
+}

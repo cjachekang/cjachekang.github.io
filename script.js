@@ -1,88 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
     let staticImages = [];
     const maxStaticImages = 10;
-    const imageWidthPercentage = 8; // First images cover 8% of the viewport width
 
-    // Reference the audio element
     const clickSound = document.getElementById('clickSound');
 
     document.documentElement.addEventListener('click', function(event) {
         if (staticImages.length >= maxStaticImages) {
-            // Open a new tab with a specific URL after the tenth image is added
+            // Only attempt to open the new tab once when the cap is reached
             if(staticImages.length === maxStaticImages) {
                 window.open('https://www.youtube.com/watch?v=xvFZjo5PgG0', '_blank');
             }
             return;
         }
 
-        // Play the click sound
-        clickSound.currentTime = 0; // Rewind to the start
-        clickSound.play();
+        clickSound.currentTime = 0; // Reset audio to start
+        clickSound.play(); // Play audio
 
         const img = document.createElement('img');
-        img.src = 'images/ollie.png'; // Adjust to your first image path
+        img.src = 'images/ollie.png'; // Make sure the path is correct
         img.classList.add('staticImage');
         img.style.position = 'fixed';
-        img.style.width = `${window.innerWidth * (imageWidthPercentage / 100)}px`; // Proportional width
-        img.style.height = 'auto'; // Maintain aspect ratio
-        img.onload = function() {
-            // Center the image on the click
+        document.body.appendChild(img);
+        img.onload = () => {
             img.style.left = `${event.pageX - img.offsetWidth / 2}px`;
             img.style.top = `${event.pageY - img.offsetHeight / 2}px`;
+            staticImages.push(img); // Add the new image to the array
         };
-        document.body.appendChild(img); // Append to ensure onload triggers correctly
-        staticImages.push({ element: img, x: event.pageX, y: event.pageY });
-
-        // Initiate movement towards images if it's the first click
-        if (!moving) {
-            moveTowardsImages();
-        }
     });
 
-    // Moving image setup
+    // Initialize and style the moving image
     const movingImg = document.createElement('img');
-    movingImg.src = 'images/colt.jpeg'; // Adjust to your moving image path
+    movingImg.src = 'images/colt.jpeg'; // Make sure the path is correct
     movingImg.classList.add('movingImage');
     movingImg.style.position = 'fixed';
-    movingImg.style.width = `${window.innerWidth * (imageWidthPercentage / 100)}px`; // Proportional width
-    movingImg.style.height = 'auto'; // Maintain aspect ratio
     document.body.appendChild(movingImg);
-    
-    let moving = false; // Flag to control movement initiation
 
     function moveTowardsImages() {
-        moving = true; // Flag the movement as active
-        let targetIndex = 0; // Reset target index for a new movement cycle
+        let targetIndex = 0; // Always target the first image in the array
+        const speed = 2; // Control the speed of the moving image
 
-        function move() {
+        const move = () => {
             if (staticImages.length === 0) {
-                moving = false; // Stop moving if no targets are left
+                requestAnimationFrame(move); // Continue the animation frame loop even if no targets
                 return;
             }
 
-            // Ensure cycling through the targets
-            if (targetIndex >= staticImages.length) {
-                targetIndex = 0; // Loop back to the first target
-            }
+            // Always target the first image in the list
+            const target = staticImages[0].getBoundingClientRect();
+            const movingRect = movingImg.getBoundingClientRect();
+            const dx = target.left + (target.width / 2) - (movingRect.left + (movingRect.width / 2));
+            const dy = target.top + (target.height / 2) - (movingRect.top + (movingRect.height / 2));
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-            const target = staticImages[targetIndex];
-            const dx = target.x - movingImg.offsetLeft - movingImg.offsetWidth / 2;
-            const dy = target.y - movingImg.offsetTop - movingImg.offsetHeight / 2;
-            const distance = Math.sqrt(dx ** 2 + dy ** 2);
-
-            if (distance < 50) { // Adjust threshold as needed for "contact"
-                target.element.remove(); // Remove the contacted image
-                staticImages.splice(targetIndex, 1); // Remove from the tracking array
+            if (distance < 50) { // Adjust this value based on your needs
+                document.body.removeChild(staticImages[0]); // Delete the targeted image
+                staticImages.shift(); // Remove the first element from the array
             } else {
-                const speed = 2; // Adjust speed as needed
-                movingImg.style.left = `${movingImg.offsetLeft + (dx / distance) * speed}px`;
-                movingImg.style.top = `${movingImg.offsetTop + (dy / distance) * speed}px`;
-                targetIndex++; // Move to the next target
+                // Move towards the target
+                movingImg.style.left = `${movingRect.left + (dx / distance) * speed}px`;
+                movingImg.style.top = `${movingRect.top + (dy / distance) * speed}px`;
             }
 
-            requestAnimationFrame(move); // Continue the movement
-        }
+            requestAnimationFrame(move); // Continue moving towards the current target
+        };
 
-        move();
+        move(); // Start the movement process
     }
+
+    moveTowardsImages(); // Begin targeting and moving towards the static images
 });
