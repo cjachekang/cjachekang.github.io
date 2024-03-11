@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let widthIncrement = 8;
     const maxStaticImages = 7;
 
+    document.body.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+
     const clickSound = document.getElementById('clickSound');
 
     document.documentElement.addEventListener('click', function(event) {
