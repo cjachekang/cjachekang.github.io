@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     let staticImages = [];
+    let widthIncrement = 8;
     const maxStaticImages = 7;
 
     const clickSound = document.getElementById('clickSound');
@@ -36,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(movingImg);
 
     function moveTowardsImages() {
-        let targetIndex = 0; // Always target the first image in the array
         const speed = 2; // Control the speed of the moving image
 
         const move = () => {
@@ -55,6 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (distance < 50) { // Adjust this value based on your needs
                 document.body.removeChild(staticImages[0]); // Delete the targeted image
                 staticImages.shift(); // Remove the first element from the array
+                widthIncrement += 5;
+                movingImg.style.width = `${widthIncrement}%`; // Apply new width
+
             } else {
                 // Move towards the target
                 movingImg.style.left = `${movingRect.left + (dx / distance) * speed}px`;
