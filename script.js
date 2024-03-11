@@ -7,7 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const clickSound = document.getElementById('clickSound');
 
     document.documentElement.addEventListener('click', function(event) {
-        if (staticImages.length >= maxStaticImages) return;
+        if (staticImages.length >= maxStaticImages) {
+            // Open a new tab with a specific URL after the tenth image is added
+            if(staticImages.length === maxStaticImages) {
+                window.open('https://www.youtube.com/watch?v=xvFZjo5PgG0', '_blank');
+            }
+            return;
+        }
 
         // Play the click sound
         clickSound.currentTime = 0; // Rewind to the start
