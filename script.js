@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     let staticImages = [];
-    const maxStaticImages = 10;
+    const maxStaticImages = 7;
 
     const clickSound = document.getElementById('clickSound');
 
