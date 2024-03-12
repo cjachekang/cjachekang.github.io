@@ -3,12 +3,35 @@ document.addEventListener('DOMContentLoaded', () => {
     let widthIncrement = 8;
     const maxStaticImages = 7;
 
-    document.body.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center";
-    document.body.style.backgroundRepeat = "no-repeat";
+    // document.body.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
+    // document.body.style.backgroundSize = "cover";
+    // document.body.style.backgroundPosition = "center";
+    // document.body.style.backgroundRepeat = "no-repeat";
 
     const clickSound = document.getElementById('clickSound');
+
+    function createFlyingColt(x, y) {
+        const flyingColt = document.createElement('img');
+        flyingColt.src = 'images/colt.jpeg'; // Make sure the path is correct
+        flyingColt.classList.add('flyingColt');
+        flyingColt.style.position = 'fixed';
+        flyingColt.style.left = `${x}px`;
+        flyingColt.style.top = `${y}px`;
+        document.body.appendChild(flyingColt);
+
+        const flyOffScreen = () => {
+            const currentX = parseInt(flyingColt.style.left, 10);
+            flyingColt.style.left = `${currentX + 10}px`; // Adjust speed if necessary
+
+            if (currentX > window.innerWidth) {
+                document.body.removeChild(flyingColt); // Remove the Colt once it's off-screen
+            } else {
+                requestAnimationFrame(flyOffScreen); // Continue flying off-screen
+            }
+        };
+
+        flyOffScreen(); // Start flying off-screen
+    }
 
     document.documentElement.addEventListener('click', function(event) {
         if (staticImages.length >= maxStaticImages) {
@@ -58,11 +81,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 50) { // Adjust this value based on your needs
+                // Find the center position of the target image for the starting point of the flying Colt
+                const targetCenterX = staticImages[0].offsetLeft + (staticImages[0].offsetWidth / 2);
+                const targetCenterY = staticImages[0].offsetTop + (staticImages[0].offsetHeight / 2);
+
                 document.body.removeChild(staticImages[0]); // Delete the targeted image
                 staticImages.shift(); // Remove the first element from the array
                 widthIncrement += 5;
                 movingImg.style.width = `${widthIncrement}%`; // Apply new width
 
+                createFlyingColt(targetCenterX, targetCenterY);
             } else {
                 // Move towards the target
                 movingImg.style.left = `${movingRect.left + (dx / distance) * speed}px`;
