@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // document.body.style.backgroundRepeat = "no-repeat";
 
     const clickSound = document.getElementById('clickSound');
+    const pewSound = document.getElementById('pewSound');
 
     function createFlyingColt(x, y) {
         const flyingColt = document.createElement('img');
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         flyingColt.style.left = `${x}px`;
         flyingColt.style.top = `${y}px`;
         document.body.appendChild(flyingColt);
+        
 
         const flyOffScreen = () => {
             const currentX = parseInt(flyingColt.style.left, 10);
@@ -91,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 movingImg.style.width = `${widthIncrement}%`; // Apply new width
 
                 createFlyingColt(targetCenterX, targetCenterY);
+                pewSound.currentTime = 0;
+                pewSound.play();
             } else {
                 // Move towards the target
                 movingImg.style.left = `${movingRect.left + (dx / distance) * speed}px`;
