@@ -1,12 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const playButton = document.getElementById('playButton');
+    const startScreen = document.getElementById('startScreen');
+
+    startScreen.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
+    startScreen.style.backgroundSize = "cover";
+    startScreen.style.backgroundPosition = "center";
+    startScreen.style.backgroundRepeat = "no-repeat";
+
+    playButton.addEventListener('click', function() {
+        event.stopPropagation();
+        startScreen.style.display = 'none'; // Hide the start screen
+        initializeGame(); // Start the game
+    });
+});
+
+function initializeGame() {
     let staticImages = [];
     let widthIncrement = 8;
     const maxStaticImages = 7;
-
-    // document.body.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
-    // document.body.style.backgroundSize = "cover";
-    // document.body.style.backgroundPosition = "center";
-    // document.body.style.backgroundRepeat = "no-repeat";
 
     const clickSound = document.getElementById('clickSound');
     const pewSound = document.getElementById('pewSound');
@@ -108,4 +119,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     moveTowardsImages(); // Begin targeting and moving towards the static images
-});
+}
