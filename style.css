@@ -1,7 +1,15 @@
 .staticImage, .movingImage, .flyingColt {
     position: fixed;
-    width: 8%; /* Proportional to viewport, adjust as needed */
+    width: 8%; 
     height: auto;
+}
+
+.facingRight {
+    transform: scaleX(-1); 
+}
+
+.facingLeft {
+    transform: scaleX(1); 
 }
 
 #startScreen {

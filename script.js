@@ -85,6 +85,7 @@ function initializeGame() {
                 requestAnimationFrame(move); // Continue the animation frame loop even if no targets
                 return;
             }
+            let lastPosition = movingImg.getBoundingClientRect().left;
 
             // Always target the first image in the list
             const target = staticImages[0].getBoundingClientRect();
@@ -107,9 +108,22 @@ function initializeGame() {
                 pewSound.currentTime = 0;
                 pewSound.play();
             } else {
+                const newPosition = movingRect.left + (dx / distance) * speed;
+
                 // Move towards the target
                 movingImg.style.left = `${movingRect.left + (dx / distance) * speed}px`;
                 movingImg.style.top = `${movingRect.top + (dy / distance) * speed}px`;
+
+                // Determine direction and apply appropriate class only if needed
+                if (newPosition > lastPosition && !movingImg.classList.contains('facingRight')) {
+                    movingImg.classList.remove('facingLeft');
+                    movingImg.classList.add('facingRight');
+                } else if (newPosition < lastPosition && !movingImg.classList.contains('facingLeft')) {
+                    movingImg.classList.remove('facingRight');
+                    movingImg.classList.add('facingLeft');
+                }
+
+                lastPosition = newPosition; // Update the last known position
             }
 
             requestAnimationFrame(move); // Continue moving towards the current target
