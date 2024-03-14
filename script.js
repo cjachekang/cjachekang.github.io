@@ -2,6 +2,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const playButton = document.getElementById('playButton');
     const startScreen = document.getElementById('startScreen');
 
+    const characters = [
+        {src: 'images/colt.jpeg', id: 'Colt'},
+        {src: 'images/scrappy.png', id: 'Scrappy'},
+        {src: 'images/zelda.png', id: 'Zelda'},
+        {src: 'images/texas.png', id: 'Texas'},
+        {src: 'images/bruno.png', id: 'Bruno'}
+    ];
+    let selectedCharacter = characters[0].src;
+
+    // Create character selection options
+    const characterSelection = document.createElement('div');
+    characterSelection.id = 'characterSelection';
+    startScreen.appendChild(characterSelection);
+
+    characters.forEach(character => {
+        const img = document.createElement('img');
+        img.src = character.src;
+        img.id = character.id;
+        img.classList.add('characterOption');
+        img.addEventListener('click', function() {
+            selectedCharacter = character.src; // Update selected character
+            document.querySelectorAll('.characterOption').forEach(option => {
+                option.classList.remove('selected');
+            });
+            img.classList.add('selected');
+        });
+        characterSelection.appendChild(img);
+    });
+
     startScreen.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
     startScreen.style.backgroundSize = "cover";
     startScreen.style.backgroundPosition = "center";
@@ -10,11 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
     playButton.addEventListener('click', function() {
         event.stopPropagation();
         startScreen.style.display = 'none'; // Hide the start screen
-        initializeGame(); // Start the game
+        initializeGame(selectedCharacter); // Start the game
     });
 });
 
-function initializeGame() {
+function initializeGame(selectedCharacter) {
     let staticImages = [];
     let widthIncrement = 8;
     const maxStaticImages = 7;
@@ -72,7 +101,8 @@ function initializeGame() {
 
     // Initialize and style the moving image
     const movingImg = document.createElement('img');
-    movingImg.src = 'images/colt.jpeg'; // Make sure the path is correct
+
+    movingImg.src = selectedCharacter; // Use the selected character image
     movingImg.classList.add('movingImage');
     movingImg.style.position = 'fixed';
     document.body.appendChild(movingImg);

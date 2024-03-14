@@ -28,3 +28,18 @@
     font-size: 24px;
     cursor: pointer;
 }
+
+#characterSelection img {
+    width: 100px;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.2s;
+}
+
+#characterSelection img:hover {
+    transform: scale(1.1);
+}
+
+.characterOption.selected {
+    border: 2px solid yellow;
+}
