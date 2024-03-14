@@ -1,15 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const playButton = document.getElementById('playButton');
     const startScreen = document.getElementById('startScreen');
 
     const characters = [
-        {src: 'images/colt.jpeg', id: 'Colt'},
-        {src: 'images/scrappy.png', id: 'Scrappy'},
-        {src: 'images/zelda.png', id: 'Zelda'},
-        {src: 'images/texas.png', id: 'Texas'},
-        {src: 'images/bruno.png', id: 'Bruno'}
+        { src: 'images/colt.jpeg', id: 'Colt', name: 'Colt' },
+        { src: 'images/scrappy.png', id: 'Scrappy', name: 'Scrappy' },
+        { src: 'images/zelda.png', id: 'Zelda', name: 'Zelda' },
+        { src: 'images/texas.png', id: 'Texas', name: 'Texas' },
+        { src: 'images/bruno.png', id: 'Bruno', name: 'Bruno' }
     ];
     let selectedCharacter = characters[0].src;
+
+    // Add title for character selection
+    const title = document.createElement('h2');
+    title.textContent = "Select Your Character";
+    title.style.textAlign = "center";
+    startScreen.appendChild(title);
 
     // Create character selection options
     const characterSelection = document.createElement('div');
@@ -17,30 +22,52 @@ document.addEventListener('DOMContentLoaded', () => {
     startScreen.appendChild(characterSelection);
 
     characters.forEach(character => {
+        const characterContainer = document.createElement('div');
+        characterContainer.classList.add('characterContainer');
+    
         const img = document.createElement('img');
         img.src = character.src;
         img.id = character.id;
         img.classList.add('characterOption');
+        img.title = character.name; // Simple tooltip
+    
+        const nameTag = document.createElement('div');
+        nameTag.textContent = character.name;
+        nameTag.classList.add('nameTag', 'hide'); // Initially hidden
+
         img.addEventListener('click', function() {
             selectedCharacter = character.src; // Update selected character
-            document.querySelectorAll('.characterOption').forEach(option => {
-                option.classList.remove('selected');
+            document.querySelectorAll('.characterContainer').forEach(container => {
+                container.classList.remove('selected'); // Remove 'selected' from all containers
             });
-            img.classList.add('selected');
+            characterContainer.classList.add('selected'); // Add 'selected' to clicked character's container
         });
-        characterSelection.appendChild(img);
+    
+        img.addEventListener('mouseenter', function() {
+            nameTag.classList.remove('hide'); // Show name tag on hover
+        });
+    
+        img.addEventListener('mouseleave', function() {
+            nameTag.classList.add('hide'); // Hide name tag when not hovering
+        });
+    
+        characterContainer.appendChild(img);
+        characterContainer.appendChild(nameTag);
+        characterSelection.appendChild(characterContainer);
+    });    
+
+    const playButton = document.getElementById('playButton');
+    startScreen.appendChild(playButton);
+    playButton.addEventListener('click', function() {
+        event.stopPropagation();
+        startScreen.style.display = 'none'; // Hide the start screen
+        initializeGame(selectedCharacter); // Start the game
     });
 
     startScreen.style.backgroundImage = "url('images/background.jpg')"; // Adjust with the correct path
     startScreen.style.backgroundSize = "cover";
     startScreen.style.backgroundPosition = "center";
     startScreen.style.backgroundRepeat = "no-repeat";
-
-    playButton.addEventListener('click', function() {
-        event.stopPropagation();
-        startScreen.style.display = 'none'; // Hide the start screen
-        initializeGame(selectedCharacter); // Start the game
-    });
 });
 
 function initializeGame(selectedCharacter) {
